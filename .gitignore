@@ -1,0 +1,5 @@
+.sass-cache/
+.DS_Store
+*.o
+*.mod
+./gaumixmod/.ipynb_checkpoints/
