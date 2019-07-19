@@ -1,2 +1,2 @@
 # MLbook
-This is a machine learning notes.
+This is a machine learning note.
