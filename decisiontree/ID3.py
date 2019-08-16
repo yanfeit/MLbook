@@ -93,7 +93,101 @@ def info_gain_train(datasets):
 	best_ = max(best_feature, key = lambda x: x[-1])
 	return '特征({})的信息增益最大，选择为根节点特征'.format(labels[best_[0]])
 
-info_gain_train(np.array(datasets))
+
+class Node:
+
+	def __init__(self, root = True, label = None, feature_name = None, feature=None):
+		self.root = root
+		self.label = label
+		self.feature_name = feature_name
+		self.feature = feature
+		self.tree = {}
+		self.result = {
+		'label': self.label,
+		'feature': self.feature,
+		'tree':self.tree
+		}
+
+	def __repr__(self):
+		return '{}'.format(self.result)
+
+	def add_node(self, val, node):
+		self.tree[val] = node
+
+	def predict(self, features):
+		if self.root is True:
+			return self.label
+		return self.tree[features[self.feature]].predict(features)
+
+class DTree:
+
+	def __init__(self, epsilon = 0.1):
+		self.epsilon = epsilon
+		self._tree = {}
+
+	@staticmethod
+	def calc_ent(datasets):
+		data_length = len(datasets)
+		label_count = {}
+		for i in range(data_length):
+			label = datasets[i][-1]
+			if label not in label_count:
+				label_count[label] = 0
+			label_count[label] += 1
+
+		ent = -sum([(p / data_length) * log2(p / data_length) 
+			for p in label_count.values()]) 
+	return ent
+
+	def cond_ent(datasets, axis = 0):
+	
+		data_length = len(datasets)
+		features_sets = {}
+
+		for i in range(data_length):
+			feature = datasets[i][axis]
+			if feature not in features_sets:
+			featureeatures_sets[feature] = []
+			features_sets[feature].append(datasets[i])
+		cond_ent = sum(
+			[len(p)/data_length * calc_ent(p) for p in features_sets.values()])
+
+		return cond_ent
+
+	# information gain
+	@staticmethod
+	def info_gain(ent, cond_ent):
+		return ent - cond_ent
+
+	def info_gain_train(self, datasets):
+
+		count = len(datasets[0]) - 1
+		ent = calc_ent(datasets)
+
+		best_feature = []
+		for c in range(count):
+			c_info_gain = info_gain(ent, cond_ent(datasets, axis = c))
+			best_feature.append((c, c_info_gain))
+		
+
+		best_ = max(best_feature, key = lambda x: x[-1])
+		return best_
+
+	def train(self, train_data):
+		
+
+
+
+
+
+
+
+
+if __name__ == "__main__":
+	info_gain_train(np.array(datasets))
+
+
+
 
 
 
